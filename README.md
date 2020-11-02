@@ -71,16 +71,15 @@ source := grpc.NewGrpcSource(
 		grpc.WithHystrixMaxConcurrentRequests(10),
 		grpc.WithHystrixCommandName("find-config-key"))
 provider := config4live.NewProvider(
-		config4live.WithSource(src),
+		config4live.WithSource(source),
 		config4live.WithCache(true),
-		config4live.WithExpiration(5*time.Second),
-	)
+		config4live.WithExpiration(5*time.Second))
 
 // find configuration with default value
-value := pr.BindString("test-name", "default_name")
-value := pr.BindBool("test-bool", true)
-value := pr.BindInt64("test-int", 123)
-value := pr.BindFloat64("test-float", 1.23)
+value := provider.BindString("test-name", "default_name")
+value := provider.BindBool("test-bool", true)
+value := provider.BindInt64("test-int", 123)
+value := provider.BindFloat64("test-float", 1.23)
 
 ```
 
