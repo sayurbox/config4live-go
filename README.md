@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sayurbox/config4live-go.svg?branch=master)](https://travis-ci.org/sayurbox/config4live-go)
+[![codecov](https://codecov.io/gh/sayurbox/config4live-go/branch/master/graph/badge.svg?token=TC05HJSAZW)](https://codecov.io/gh/sayurbox/config4live-go)
 
 # Config4live-go
 Centralized live **configuration library for Go**. for microservice or distributed system.
@@ -60,7 +62,7 @@ go get github.com/sayurbox/config4live-go
 
 ## Example
 
-Create source (grpc url is required, hystrx config is optional) and provider instance
+Create source (grpc url is required, hystrx config is optional) instance and provider instance
 ```golang
 source := grpc.NewGrpcSource(
 		grpc.WithURL("localhost:50051"),
