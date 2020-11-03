@@ -64,6 +64,11 @@ go get github.com/sayurbox/config4live-go
 
 Create source (grpc url is required, hystrx config is optional) instance and provider instance
 ```golang
+import (
+	"github.com/sayurbox/config4live-go"
+	grpc "github.com/sayurbox/config4live-go/grpc"
+)
+
 source := grpc.NewGrpcSource(
 		grpc.WithURL("localhost:50051"),
 		grpc.WithHystrixTimeout(1000),
