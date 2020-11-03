@@ -14,7 +14,6 @@ import (
 // GrpcSource grpc configuration source
 type GrpcSource struct {
 	url          string
-	connection   *grpc.ClientConn
 	stub         pb.LiveConfigurationClient
 	hystrixParam *config4live.HystrixParams
 }
@@ -50,14 +49,16 @@ func NewGrpcSource(opts ...Option) *GrpcSource {
 	for _, opt := range opts {
 		opt(s)
 	}
-	if s.hystrixParam != nil && s.hystrixParam.Name == "" {
+	if s.hystrixParam == nil {
+		s.hystrixParam = &config4live.HystrixParams{}
+	}
+	if s.hystrixParam.Name == "" {
 		s.hystrixParam.Name = "live-config-command-key"
 	}
 	conn, err := grpc.Dial(s.url, grpc.WithInsecure(), grpc.WithTimeout(2*time.Second))
 	if err != nil {
 		panic(err)
 	}
-	s.connection = conn
 	s.stub = pb.NewLiveConfigurationClient(conn)
 	return s
 }

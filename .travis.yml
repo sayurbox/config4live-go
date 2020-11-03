@@ -5,9 +5,9 @@ go:
 
 before_install:
   - go get -t -v ./...
-
+  
 script:
-  - go test $(go list ./... | grep -v /config4live-go/config4live) -coverprofile=coverage.txt -covermode=atomic
-
+  - ./go-test.sh
+  
 after_success:
   - bash <(curl -s https://codecov.io/bash)
