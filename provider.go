@@ -88,6 +88,6 @@ func NewProvider(opts ...Option) Provider {
 	for _, opt := range opts {
 		opt(p)
 	}
-	p.cache = cache.New(p.expiration, time.Hour)
+	p.cache = cache.New(p.expiration, time.Second)
 	return p
 }
