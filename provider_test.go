@@ -18,6 +18,22 @@ type ProviderTestSuite struct {
 	cache    *cache.Cache
 }
 
+// MockStruct is struct type for mocking
+type MockStruct struct {
+	Name    string
+	Id      int
+	Address MockAddress
+}
+
+// MockAddress is struct type for mocking
+type MockAddress struct {
+	Postal      int
+	Coordinates []float64
+}
+
+// MockList is slice type for mocking
+type MockList []string
+
 func (s *ProviderTestSuite) SetupTest() {
 	s.source = &mockSource{}
 	s.provider = NewProvider(
@@ -90,6 +106,54 @@ func (s *ProviderTestSuite) TestProvider_BindFloat64NotFoundFallbackDefault() {
 	s.source.On("Get", "key_float").Return(nil, errors.New("config not found"))
 	actual := s.provider.BindFloat64("key_float", 25)
 	assert.Equal(s.T(), float64(25), actual)
+}
+
+func (s *ProviderTestSuite) TestProvider_BindAnyFound() {
+	s.source.On("Get", "key_any_struct").Return(&Config{
+		Name:  "key_any_struct",
+		Value: "{\"id\":1,\"name\":\"Jhon\",\"address\":{\"postal\":12345,\"coordinates\":[1.32193,0.1299321]}}",
+	}, nil)
+	s.source.On("Get", "key_any_list").Return(&Config{
+		Name:  "key_any_list",
+		Value: "[\"ymail.com\",\"test.com\"]",
+	}, nil)
+
+	mocked1 := MockStruct{
+		Id:   2,
+		Name: "Smith",
+		Address: MockAddress{
+			Postal:      67890,
+			Coordinates: []float64{0.88930, 0.32188},
+		},
+	}
+	actual1 := s.provider.BindAny("key_any_struct", mocked1).(MockStruct)
+	assert.Equal(s.T(), 1, actual1.Id)
+	assert.Equal(s.T(), "Jhon", actual1.Name)
+	assert.Equal(s.T(), 12345, actual1.Address.Postal)
+	assert.Equal(s.T(), []float64{1.32193, 0.1299321}, actual1.Address.Coordinates)
+
+	mocked2 := MockList{}
+	actual2 := s.provider.BindAny("key_any_list", mocked2).(MockList)
+	assert.Equal(s.T(), 2, len(actual2))
+	assert.Equal(s.T(), MockList{"ymail.com", "test.com"}, actual2)
+}
+
+func (s *ProviderTestSuite) TestProvider_BindAnyNotFoundFallbackDefault() {
+	s.source.On("Get", "key_any").Return(nil, errors.New("config not found"))
+
+	mocked := MockStruct{
+		Id:   2,
+		Name: "Smith",
+		Address: MockAddress{
+			Postal:      67890,
+			Coordinates: []float64{0.88930, 0.32188},
+		},
+	}
+	actual := s.provider.BindAny("key_any", mocked).(MockStruct)
+	assert.Equal(s.T(), 2, actual.Id)
+	assert.Equal(s.T(), "Smith", actual.Name)
+	assert.Equal(s.T(), 67890, actual.Address.Postal)
+	assert.Equal(s.T(), []float64{0.88930, 0.32188}, actual.Address.Coordinates)
 }
 
 func TestProviderSuite(t *testing.T) {
