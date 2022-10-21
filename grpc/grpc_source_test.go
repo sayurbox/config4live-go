@@ -40,6 +40,8 @@ func (*mockGrpcServer) FindConfig(ctx context.Context, req *pb.ConfigRequest) (*
 			Value:       "test_config_value",
 			Description: "test_description",
 		}, nil
+	case "test_config_empty":
+		return &pb.ConfigResponse{}, nil
 	}
 	return nil, nil
 }
@@ -97,6 +99,13 @@ func (s *GrpcSourceTestSuite) TestGetConfig_Timeout() {
 	assert.NotNil(s.T(), e)
 	assert.Nil(s.T(), actual)
 	assert.Contains(s.T(), e.Error(), "hystrix: timeout")
+}
+
+func (s *GrpcSourceTestSuite) TestGetConfig_Empty() {
+	actual, e := s.src.Get("test_config_empty")
+	assert.NotNil(s.T(), e)
+	assert.Nil(s.T(), actual)
+	assert.Contains(s.T(), e.Error(), "Config test_config_empty is not found")
 }
 
 func TestGrpcSourceSuite(t *testing.T) {

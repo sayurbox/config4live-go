@@ -2,6 +2,8 @@ package grpc
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -40,6 +42,11 @@ func (g *GrpcSource) Get(key string) (*config4live.Config, error) {
 	if hystrixResp.Error != nil {
 		log.Printf("Error get config :%s\n", hystrixResp.Error.Error())
 	}
+
+	if hystrixResp.Output != nil && hystrixResp.Output.ID == "" {
+		return nil, errors.New(fmt.Sprintf("Config %s is not found", key))
+	}
+
 	return hystrixResp.Output, hystrixResp.Error
 }
 

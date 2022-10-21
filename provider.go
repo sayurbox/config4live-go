@@ -70,7 +70,6 @@ func (p *providerImpl) BindAny(key string, defaultValue any) any {
 func (p *providerImpl) bind(key string, defaultValue interface{}) string {
 	c, found := p.cache.Get(key)
 	if found {
-		log.Printf("Found %s cache", key)
 		return c.(string)
 	}
 	src, e := p.source.Get(key)
