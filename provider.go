@@ -48,7 +48,6 @@ func (p *providerImpl) BindFloat64(key string, defaultValue float64) float64 {
 func (p *providerImpl) bind(key string, defaultValue interface{}) string {
 	c, found := p.cache.Get(key)
 	if found {
-		log.Printf("Found %s cache", key)
 		return c.(string)
 	}
 	src, e := p.source.Get(key)
