@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGrpcOptions(t *testing.T) {
+func TestHttpOptions(t *testing.T) {
 	s := NewHttpSource(WithURL("url"))
 	assert.Equal(t, "url", s.url)
 	s = NewHttpSource(WithHystrixCommandName(""))
