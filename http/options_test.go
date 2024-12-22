@@ -3,6 +3,7 @@ package http
 import (
 	"testing"
 
+	"github.com/sayurbox/config4live-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,4 +23,8 @@ func TestHttpOptions(t *testing.T) {
 	assert.Equal(t, 20, s.hystrixParam.RequestVolumeThreshold)
 	s = NewHttpSource(WithHystrixSleepWindow(100))
 	assert.Equal(t, 100, s.hystrixParam.SleepWindow)
+	s = NewHttpSource(WithHystrix(nil))
+	assert.NotNil(t, s.hystrixParam)
+	s = NewHttpSource(WithHystrix(&internal.HystrixParams{}))
+	assert.NotNil(t, s.hystrixParam)
 }

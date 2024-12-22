@@ -91,22 +91,8 @@ func NewSource(opts ...SourceOption) Source {
 	}
 
 	if strings.HasPrefix(s.url, "http") {
-		return http.NewHttpSource(
-			http.WithURL(s.url),
-			http.WithHystrixTimeout(s.hystrixParam.Timeout),
-			http.WithHystrixErrorPercentThreshold(s.hystrixParam.ErrorPercentThreshold),
-			http.WithHystrixSleepWindow(s.hystrixParam.SleepWindow),
-			http.WithHystrixRequestVolumeThreshold(s.hystrixParam.RequestVolumeThreshold),
-			http.WithHystrixMaxConcurrentRequests(s.hystrixParam.MaxConcurrentRequests),
-			http.WithHystrixCommandName(s.hystrixParam.Name))
+		return http.NewHttpSource(http.WithURL(s.url), http.WithHystrix(s.hystrixParam))
 	}
 
-	return grpc.NewGrpcSource(
-		grpc.WithURL(s.url),
-		grpc.WithHystrixTimeout(s.hystrixParam.Timeout),
-		grpc.WithHystrixErrorPercentThreshold(s.hystrixParam.ErrorPercentThreshold),
-		grpc.WithHystrixSleepWindow(s.hystrixParam.SleepWindow),
-		grpc.WithHystrixRequestVolumeThreshold(s.hystrixParam.RequestVolumeThreshold),
-		grpc.WithHystrixMaxConcurrentRequests(s.hystrixParam.MaxConcurrentRequests),
-		grpc.WithHystrixCommandName(s.hystrixParam.Name))
+	return grpc.NewGrpcSource(grpc.WithURL(s.url), grpc.WithHystrix(s.hystrixParam))
 }

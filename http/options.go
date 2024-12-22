@@ -73,3 +73,14 @@ func WithHystrixCommandName(commandName string) Option {
 		s.hystrixParam.Name = commandName
 	}
 }
+
+// WithHystrix set hystrix object
+func WithHystrix(params *internal.HystrixParams) Option {
+	return func(s *HttpSource) {
+		if params != nil {
+			s.hystrixParam = params
+		} else {
+			s.hystrixParam = &internal.HystrixParams{}
+		}
+	}
+}

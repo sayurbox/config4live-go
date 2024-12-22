@@ -3,6 +3,7 @@ package grpc
 import (
 	"testing"
 
+	"github.com/sayurbox/config4live-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,4 +23,8 @@ func TestGrpcOptions(t *testing.T) {
 	assert.Equal(t, 20, s.hystrixParam.RequestVolumeThreshold)
 	s = NewGrpcSource(WithHystrixSleepWindow(100))
 	assert.Equal(t, 100, s.hystrixParam.SleepWindow)
+	s = NewGrpcSource(WithHystrix(nil))
+	assert.NotNil(t, s.hystrixParam)
+	s = NewGrpcSource(WithHystrix(&internal.HystrixParams{}))
+	assert.NotNil(t, s.hystrixParam)
 }
