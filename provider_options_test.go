@@ -4,13 +4,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/sayurbox/config4live-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
 type objectSource struct {
 }
 
-func (o *objectSource) Get(key string) (*Config, error) {
+func (o *objectSource) Get(key string) (*internal.Config, error) {
 	return nil, nil
 }
 

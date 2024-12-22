@@ -1,4 +1,4 @@
-package config4live
+package internal
 
 import "github.com/afex/hystrix-go/hystrix"
 

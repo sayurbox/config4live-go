@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sayurbox/config4live-go"
 	pb "github.com/sayurbox/config4live-go/config4live"
+	"github.com/sayurbox/config4live-go/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"
@@ -70,7 +70,7 @@ type GrpcSourceTestSuite struct {
 func (s *GrpcSourceTestSuite) SetupTest() {
 	s.src = &GrpcSource{}
 	ctx := context.Background()
-	s.src.hystrixParam = &config4live.HystrixParams{Name: "test-config"}
+	s.src.hystrixParam = &internal.HystrixParams{Name: "test-config"}
 	conn, err := grpc.DialContext(ctx, "", grpc.WithInsecure(), grpc.WithContextDialer(dialer()))
 	if err != nil {
 		panic(err)
@@ -105,7 +105,7 @@ func (s *GrpcSourceTestSuite) TestGetConfig_Empty() {
 	actual, e := s.src.Get("test_config_empty")
 	assert.NotNil(s.T(), e)
 	assert.Nil(s.T(), actual)
-	assert.Contains(s.T(), e.Error(), "Config test_config_empty is not found")
+	assert.Contains(s.T(), e.Error(), "config test_config_empty is not found")
 }
 
 func TestGrpcSourceSuite(t *testing.T) {

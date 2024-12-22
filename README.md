@@ -16,7 +16,7 @@ Inspired from [https://github.com/cfg4j/cfg4j](https://github.com/cfg4j/cfg4j)
   - Avoid too many requests to config server
   - [go-cache](https://github.com/patrickmn/go-cache) cache
 - HTTP connection
-  - will implement later.
+  - Using [net/http](https://pkg.go.dev/net/http) to provides HTTP client and server implementations.
 
 ## gRPC proto file format
 
@@ -64,7 +64,71 @@ go get github.com/sayurbox/config4live-go
 
 ## Example
 
-Create source (grpc url is required, hystrx config is optional) instance and provider instance
+Params :
+- url : mandatory
+- hystrx : optional
+
+Creating source can be done using 3 ways:
+- Grpc only
+
+```golang
+import (
+	"github.com/sayurbox/config4live-go"
+	grpc "github.com/sayurbox/config4live-go/grpc"
+)
+
+func main() {
+  source := grpc.NewGrpcSource(
+		grpc.WithURL("localhost:50051"),
+		grpc.WithHystrixTimeout(1000),
+		grpc.WithHystrixErrorPercentThreshold(25),
+		grpc.WithHystrixSleepWindow(500),
+		grpc.WithHystrixRequestVolumeThreshold(10),
+		grpc.WithHystrixMaxConcurrentRequests(10),
+		grpc.WithHystrixCommandName("find-config-key"))
+}
+```
+
+- Http only
+
+```golang
+import (
+	"github.com/sayurbox/config4live-go"
+	http "github.com/sayurbox/config4live-go/http"
+)
+
+func main() {
+  source := http.NewHttpSource(
+		http.WithURL("http://localhost:8080"),
+		http.WithHystrixTimeout(1000),
+		http.WithHystrixErrorPercentThreshold(25),
+		http.WithHystrixSleepWindow(500),
+		http.WithHystrixRequestVolumeThreshold(10),
+		http.WithHystrixMaxConcurrentRequests(10),
+		http.WithHystrixCommandName("find-config-key"))
+}
+```
+
+- Auto
+
+```golang
+import (
+	"github.com/sayurbox/config4live-go"
+)
+
+func main() {
+  source := config4live.NewSource(
+		config4live.WithURL("http://localhost:8080"),
+		config4live.WithHystrixTimeout(1000),
+		config4live.WithHystrixErrorPercentThreshold(25),
+		config4live.WithHystrixSleepWindow(500),
+		config4live.WithHystrixRequestVolumeThreshold(10),
+		config4live.WithHystrixMaxConcurrentRequests(10),
+		config4live.WithHystrixCommandName("find-config-key"))
+}
+```
+
+Here complete usage :
 
 ```golang
 import (

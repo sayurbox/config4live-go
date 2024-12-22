@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/patrickmn/go-cache"
+	"github.com/sayurbox/config4live-go/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -15,7 +15,6 @@ type ProviderTestSuite struct {
 	suite.Suite
 	provider *providerImpl
 	source   *mockSource
-	cache    *cache.Cache
 }
 
 // MockStruct is struct type for mocking
@@ -43,7 +42,7 @@ func (s *ProviderTestSuite) SetupTest() {
 }
 
 func (s *ProviderTestSuite) TestProvider_BindStringFound() {
-	s.source.On("Get", "key_string").Return(&Config{
+	s.source.On("Get", "key_string").Return(&internal.Config{
 		Name:  "key_string",
 		Value: "test_value",
 	}, nil)
@@ -64,7 +63,7 @@ func (s *ProviderTestSuite) TestProvider_BindStringNotFoundFallbackDefault() {
 }
 
 func (s *ProviderTestSuite) TestProvider_BindBoolFound() {
-	s.source.On("Get", "key_bool").Return(&Config{
+	s.source.On("Get", "key_bool").Return(&internal.Config{
 		Name:  "key_bool",
 		Value: "false",
 	}, nil)
@@ -79,7 +78,7 @@ func (s *ProviderTestSuite) TestProvider_BindBoolNotFoundFallbackDefault() {
 }
 
 func (s *ProviderTestSuite) TestProvider_BindInt64Found() {
-	s.source.On("Get", "key_int").Return(&Config{
+	s.source.On("Get", "key_int").Return(&internal.Config{
 		Name:  "key_int",
 		Value: "15",
 	}, nil)
@@ -94,7 +93,7 @@ func (s *ProviderTestSuite) TestProvider_BindInt64NotFoundFallbackDefault() {
 }
 
 func (s *ProviderTestSuite) TestProvider_BindFloat64Found() {
-	s.source.On("Get", "key_float").Return(&Config{
+	s.source.On("Get", "key_float").Return(&internal.Config{
 		Name:  "key_float",
 		Value: "1.5",
 	}, nil)
@@ -109,11 +108,11 @@ func (s *ProviderTestSuite) TestProvider_BindFloat64NotFoundFallbackDefault() {
 }
 
 func (s *ProviderTestSuite) TestProvider_BindAnyFound() {
-	s.source.On("Get", "key_any_struct").Return(&Config{
+	s.source.On("Get", "key_any_struct").Return(&internal.Config{
 		Name:  "key_any_struct",
 		Value: "{\"id\":1,\"name\":\"Jhon\",\"address\":{\"postal\":12345,\"coordinates\":[1.32193,0.1299321]}}",
 	}, nil)
-	s.source.On("Get", "key_any_list").Return(&Config{
+	s.source.On("Get", "key_any_list").Return(&internal.Config{
 		Name:  "key_any_list",
 		Value: "[\"ymail.com\",\"test.com\"]",
 	}, nil)
@@ -165,10 +164,10 @@ type mockSource struct {
 	mock.Mock
 }
 
-func (m *mockSource) Get(key string) (*Config, error) {
+func (m *mockSource) Get(key string) (*internal.Config, error) {
 	args := m.Called(key)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*Config), args.Error(1)
+	return args.Get(0).(*internal.Config), args.Error(1)
 }
