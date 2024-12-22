@@ -1,7 +1,7 @@
 package grpc
 
 import (
-	"github.com/sayurbox/config4live-go"
+	"github.com/sayurbox/config4live-go/internal"
 )
 
 // Option the grpc source options
@@ -18,7 +18,7 @@ func WithURL(url string) Option {
 func WithHystrixTimeout(timeout int) Option {
 	return func(s *GrpcSource) {
 		if s.hystrixParam == nil {
-			s.hystrixParam = &config4live.HystrixParams{}
+			s.hystrixParam = &internal.HystrixParams{}
 		}
 		s.hystrixParam.Timeout = timeout
 	}
@@ -28,7 +28,7 @@ func WithHystrixTimeout(timeout int) Option {
 func WithHystrixSleepWindow(sleepWindow int) Option {
 	return func(s *GrpcSource) {
 		if s.hystrixParam == nil {
-			s.hystrixParam = &config4live.HystrixParams{}
+			s.hystrixParam = &internal.HystrixParams{}
 		}
 		s.hystrixParam.SleepWindow = sleepWindow
 	}
@@ -38,7 +38,7 @@ func WithHystrixSleepWindow(sleepWindow int) Option {
 func WithHystrixRequestVolumeThreshold(requestVolume int) Option {
 	return func(s *GrpcSource) {
 		if s.hystrixParam == nil {
-			s.hystrixParam = &config4live.HystrixParams{}
+			s.hystrixParam = &internal.HystrixParams{}
 		}
 		s.hystrixParam.RequestVolumeThreshold = requestVolume
 	}
@@ -48,7 +48,7 @@ func WithHystrixRequestVolumeThreshold(requestVolume int) Option {
 func WithHystrixErrorPercentThreshold(errorPercent int) Option {
 	return func(s *GrpcSource) {
 		if s.hystrixParam == nil {
-			s.hystrixParam = &config4live.HystrixParams{}
+			s.hystrixParam = &internal.HystrixParams{}
 		}
 		s.hystrixParam.ErrorPercentThreshold = errorPercent
 	}
@@ -58,7 +58,7 @@ func WithHystrixErrorPercentThreshold(errorPercent int) Option {
 func WithHystrixMaxConcurrentRequests(maxRequest int) Option {
 	return func(s *GrpcSource) {
 		if s.hystrixParam == nil {
-			s.hystrixParam = &config4live.HystrixParams{}
+			s.hystrixParam = &internal.HystrixParams{}
 		}
 		s.hystrixParam.MaxConcurrentRequests = maxRequest
 	}
@@ -68,7 +68,7 @@ func WithHystrixMaxConcurrentRequests(maxRequest int) Option {
 func WithHystrixCommandName(commandName string) Option {
 	return func(s *GrpcSource) {
 		if s.hystrixParam == nil {
-			s.hystrixParam = &config4live.HystrixParams{}
+			s.hystrixParam = &internal.HystrixParams{}
 		}
 		s.hystrixParam.Name = commandName
 	}

@@ -11,27 +11,27 @@ import (
 	"time"
 
 	"github.com/afex/hystrix-go/hystrix"
-	"github.com/sayurbox/config4live-go"
+	"github.com/sayurbox/config4live-go/internal"
 )
 
 // HttpSource http configuration source
 type HttpSource struct {
 	url          string
 	client       *http.Client
-	hystrixParam *config4live.HystrixParams
+	hystrixParam *internal.HystrixParams
 }
 
 // HttpResponse struct to match the response
 type HttpResponse struct {
-	Success bool                `json:"success"`
-	Error   string              `json:"error"`
-	Data    *config4live.Config `json:"data"`
+	Success bool             `json:"success"`
+	Error   string           `json:"error"`
+	Data    *internal.Config `json:"data"`
 }
 
 // Get call http findConfig by key
-func (h *HttpSource) Get(key string) (*config4live.Config, error) {
+func (h *HttpSource) Get(key string) (*internal.Config, error) {
 	hystrix.ConfigureCommand(h.hystrixParam.Name, h.hystrixParam.HystrixConfig())
-	responseChannel := make(chan config4live.GetConfigResponse, 1)
+	responseChannel := make(chan internal.GetConfigResponse, 1)
 
 	hystrix.Go(h.hystrixParam.Name, func() error {
 		fullUrl := fmt.Sprintf("%s/v1/live-configuration/configuration?name=%s", h.url, key)
@@ -39,7 +39,7 @@ func (h *HttpSource) Get(key string) (*config4live.Config, error) {
 
 		if err != nil {
 			log.Println("Unable to create http request payload")
-			responseChannel <- config4live.GetConfigResponse{
+			responseChannel <- internal.GetConfigResponse{
 				Error: err,
 			}
 
@@ -53,7 +53,7 @@ func (h *HttpSource) Get(key string) (*config4live.Config, error) {
 		httpResp, err := h.client.Do(httpReq)
 		if err != nil {
 			log.Println("Failed to send request")
-			responseChannel <- config4live.GetConfigResponse{
+			responseChannel <- internal.GetConfigResponse{
 				Error: err,
 			}
 
@@ -61,7 +61,7 @@ func (h *HttpSource) Get(key string) (*config4live.Config, error) {
 		}
 
 		data, err := handleResponse(httpResp)
-		responseChannel <- config4live.GetConfigResponse{
+		responseChannel <- internal.GetConfigResponse{
 			Output: data,
 			Error:  err,
 		}
@@ -69,7 +69,7 @@ func (h *HttpSource) Get(key string) (*config4live.Config, error) {
 		return err
 	}, func(e error) error {
 		log.Println("Fallback is executed")
-		responseChannel <- config4live.GetConfigResponse{
+		responseChannel <- internal.GetConfigResponse{
 			Error: e,
 		}
 
@@ -96,7 +96,7 @@ func NewHttpSource(opts ...Option) *HttpSource {
 	}
 
 	if s.hystrixParam == nil {
-		s.hystrixParam = &config4live.HystrixParams{}
+		s.hystrixParam = &internal.HystrixParams{}
 	}
 
 	if s.hystrixParam.Name == "" {
@@ -110,7 +110,7 @@ func NewHttpSource(opts ...Option) *HttpSource {
 	return s
 }
 
-func handleResponse(response *http.Response) (*config4live.Config, error) {
+func handleResponse(response *http.Response) (*internal.Config, error) {
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err

@@ -1,4 +1,4 @@
-package config4live
+package internal
 
 // Config configuration property
 type Config struct {

@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/sayurbox/config4live-go"
+	"github.com/sayurbox/config4live-go/internal"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -94,7 +94,7 @@ func TestHttpSource_Get_Success(t *testing.T) {
 
 	source := NewHttpSource(func(s *HttpSource) {
 		s.url = server.URL
-		s.hystrixParam = &config4live.HystrixParams{
+		s.hystrixParam = &internal.HystrixParams{
 			Name:    "test-command",
 			Timeout: 1000,
 		}
@@ -119,7 +119,7 @@ func TestHttpSource_Get_NotFound(t *testing.T) {
 
 	source := NewHttpSource(func(s *HttpSource) {
 		s.url = server.URL
-		s.hystrixParam = &config4live.HystrixParams{
+		s.hystrixParam = &internal.HystrixParams{
 			Name:    "test-command",
 			Timeout: 1000,
 		}
@@ -134,7 +134,7 @@ func TestHttpSource_Get_NotFound(t *testing.T) {
 func TestHttpSource_Get_Fallback(t *testing.T) {
 	source := NewHttpSource(func(s *HttpSource) {
 		s.url = "http://invalid-url"
-		s.hystrixParam = &config4live.HystrixParams{
+		s.hystrixParam = &internal.HystrixParams{
 			Name:    "test-command",
 			Timeout: 1000,
 		}

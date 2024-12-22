@@ -1,4 +1,4 @@
-package config4live
+package internal
 
 import (
 	"testing"
