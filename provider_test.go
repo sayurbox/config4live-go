@@ -5,7 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/patrickmn/go-cache"
 	"github.com/sayurbox/config4live-go/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -16,7 +15,6 @@ type ProviderTestSuite struct {
 	suite.Suite
 	provider *providerImpl
 	source   *mockSource
-	cache    *cache.Cache
 }
 
 // MockStruct is struct type for mocking
